@@ -21,6 +21,6 @@ A tool for canvas programing, offer some apis for 3D
 └── readme.md
 ```
 
-
+## [Example DEMO](http://api.zeroling.com/JCanvas/example/)
 
 2015年11月18日 Ling.
