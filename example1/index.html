@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>test1</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+        canvas {
+            display: block;
+            margin: 0 auto;
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas" width="800" height="600"></canvas>
+<p>说明: 呵呵呵</p>
+<script src="../lib/LCVS-compiled.js"></script>
+<script>
+    function throttle (func, wait) {
+        var context, args, timeout, result;
+        var previous = 0;
+        var later = function () {
+            previous = new Date;
+            timeout = null;
+            result = func.apply(context, args);
+        };
+        return function () {
+            var now = new Date;
+            var remaining = wait - (now - previous);
+            context = this;
+            args = arguments;
+            if (remaining <= 0) {
+                clearTimeout(timeout);
+                timeout = null;
+                previous = now;
+                result = func.apply(context, args);
+            } else if (!timeout) {
+                timeout = setTimeout(later, remaining);
+            }
+            return result;
+        };
+    }
+    ;(function (win, doc) {
+        var canvas = doc.querySelector('#canvas');
+        var stage = new CVS.Stage(canvas);
+        var kids = [];
+
+        var rect = new CVS.Sprite(stage.ctx, {
+            width: 100,
+            height: 100,
+            draw: function () {
+                this.ctx.beginPath();
+                this.ctx.rect(0, 0, this.width, this.height);
+                this.ctx.closePath();
+                this.ctx.fillStyle = 'green';
+                this.ctx.fill();
+            }
+        });
+        stage.addChild(rect);
+        var _x = 0, _y = 0;
+        stage.addEventListener('mousemove', function (x, y) {
+            _x = x;
+            _y = y;
+//            rect.x = x - rect.width / 2;
+//            rect.y = y - rect.height / 2;
+        });
+        stage.onRefresh = function () {
+//            console.log('refresh');
+            rect.x += (_x - rect.width / 2 - rect.x) * 0.2;
+            rect.y += (_y - rect.height / 2 - rect.y) * 0.2;
+        };
+        stage.start();
+    })(window, document);
+</script>
+</body>
+</html>
